@@ -1,0 +1,403 @@
+openapi: 3.0.0
+info:
+  title: stoREST
+  version: '1.0'
+  description: ''
+  contact:
+    name: 'Ivan '
+servers:
+  - url: 'http://malomalsky.studio'
+paths:
+  /total_cost:
+    parameters: []
+    get:
+      summary: Сумма всех цен ресурсов на складе
+      tags:
+        - total_cost
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  total_cost:
+                    type: object
+                    properties:
+                      price__sum:
+                        type: number
+                    required:
+                      - price__sum
+                required:
+                  - total_cost
+              examples:
+                example-1:
+                  value:
+                    total_cost:
+                      price__sum: 72
+      operationId: 'views.total_cost_view'
+      description: Сумма всех цен ресурсов на складе
+  /resources:
+    post:
+      summary: Create New User
+      operationId: post-user
+      responses:
+        '201':
+          description: Ресурс создан
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  id:
+                    type: number
+                  title:
+                    type: string
+                    minLength: 1
+                  amount:
+                    type: number
+                  unit:
+                    type: string
+                    minLength: 1
+                  price:
+                    type: number
+                  date:
+                    type: string
+                    minLength: 1
+                required:
+                  - id
+                  - title
+                  - amount
+                  - unit
+                  - price
+                  - date
+              examples:
+                New Resource:
+                  value:
+                    id: 7
+                    title: res_5
+                    amount: 1000
+                    unit: kg
+                    price: 12
+                    date: '2021-04-12'
+        '400':
+          description: Пропущен какой-то параметр ресурса
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  title:
+                    type: array
+                    items:
+                      properties: {}
+                  amount:
+                    type: array
+                    items:
+                      properties: {}
+                  unit:
+                    type: array
+                    items:
+                      properties: {}
+                  price:
+                    type: array
+                    items:
+                      properties: {}
+                  date:
+                    type: array
+                    items:
+                      properties: {}
+                required:
+                  - title
+                  - amount
+                  - unit
+                  - price
+                  - date
+        '401':
+          description: Unauthorized
+        '409':
+          description: Ресурс с таким названием уже существует
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    minLength: 1
+                required:
+                  - detail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                amount:
+                  type: number
+                unit:
+                  type: string
+                  minLength: 1
+                price:
+                  type: number
+                date:
+                  type: string
+                  minLength: 1
+              required:
+                - title
+                - amount
+                - unit
+                - price
+                - date
+            examples: {}
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+        description: Post the necessary fields for the API to create a new user.
+      description: Создает новый ресурс
+      parameters: []
+      tags:
+        - resource
+    parameters: []
+    get:
+      summary: ''
+      operationId: resources_view
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  resources:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      required:
+                        - id
+                        - title
+                        - amount
+                        - unit
+                        - price
+                        - date
+                      properties:
+                        id:
+                          type: number
+                        title:
+                          type: string
+                          minLength: 1
+                        amount:
+                          type: number
+                        unit:
+                          type: string
+                          minLength: 1
+                        price:
+                          type: number
+                        date:
+                          type: string
+                          minLength: 1
+                  total_count:
+                    type: number
+                required:
+                  - resources
+                  - total_count
+              examples:
+                Пример:
+                  value:
+                    resources:
+                      - id: 1
+                        title: Болт
+                        amount: 123
+                        unit: шт.
+                        price: 18
+                        date: '2021-04-12'
+                      - id: 2
+                        title: Доска
+                        amount: 3
+                        unit: шт.
+                        price: 33
+                        date: '2021-04-12'
+                    total_count: 2
+      description: 'Список всех ресурсов в формате JSON, общее число ресурсов'
+      tags:
+        - resource
+    delete:
+      summary: ''
+      operationId: delete-resources
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Ресурса с таким id нет в списке
+      description: Удаляет конкретный ресурс
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Content-Type
+          description: application/x-www-form-urlencoded
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties: {}
+      tags:
+        - resource
+    put:
+      summary: ''
+      operationId: put-resources
+      responses:
+        '200':
+          description: Ресурс изменен
+          headers: {}
+        '400':
+          description: Не передан id в теле запроса
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    minLength: 1
+                required:
+                  - detail
+              examples:
+                example-1:
+                  value:
+                    detail: You need to enter integer resource id in request body.
+        '404':
+          description: 'Ресурса с таким id нет '
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    minLength: 1
+                required:
+                  - detail
+              examples:
+                example-1:
+                  value:
+                    detail: Not found.
+      description: Изменяет все поля конкретного ресурса
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Content-Type
+          description: application/x-www-form-urlencoded
+          required: true
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties: {}
+          application/json:
+            schema:
+              type: object
+              properties: {}
+        description: id=id&title=title&amount=amount&unit=unit&price=price&date=date
+      tags:
+        - resource
+    patch:
+      summary: ''
+      operationId: patch-resources
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Ошибка в валидации - неправильное значение параметра
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    minLength: 1
+                required:
+                  - detail
+      description: Частичное обновление ресурса
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Content-Type
+          description: application/x-www-form-urlencoded
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties: {}
+          application/json:
+            schema:
+              type: object
+              properties: {}
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+        description: id=integer(required)&param=param...
+      tags:
+        - resource
+components:
+  schemas:
+    resource:
+      description: Ресурс на складе
+      type: object
+      properties:
+        id:
+          type: number
+        title:
+          type: string
+          minLength: 1
+        amount:
+          type: number
+        unit:
+          type: string
+          minLength: 1
+        price:
+          type: number
+        date:
+          type: string
+          minLength: 1
+      required:
+        - id
+        - title
+        - amount
+        - unit
+        - price
+        - date
+      x-examples:
+        Болт:
+          id: 1
+          title: Болт
+          amount: 123
+          unit: шт.
+          price: 18
+          date: '2021-04-12'
+      title: Resource
