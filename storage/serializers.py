@@ -1,5 +1,6 @@
-from .models import Resource
 from rest_framework import serializers
+
+from .models import Resource
 
 
 class ResourceSerializer(serializers.Serializer):
