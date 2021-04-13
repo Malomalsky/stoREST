@@ -82,6 +82,7 @@ def resources_view(request):
 @api_view(['GET'])
 def total_cost_view(request):
     total_cost = Resource.objects.aggregate(Sum('price'))
+    print(total_cost)
     return Response(
-        {"total_cost": total_cost}
+        {"total_cost": total_cost['price__sum']}
     )
